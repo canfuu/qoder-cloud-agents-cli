@@ -22,6 +22,7 @@ func init() {
 	rootCmd.AddCommand(envCmd)
 	rootCmd.AddCommand(sessionCmd)
 	rootCmd.AddCommand(modelCmd)
+	rootCmd.AddCommand(daemonCmd)
 
 	rootCmd.Version = "0.1.0"
 	rootCmd.SetVersionTemplate(fmt.Sprintf("qca version %s\n", "0.1.0"))

@@ -80,6 +80,35 @@ qca session chat <session-id>            # Interactive chat mode
 qca model                                # List available models
 ```
 
+### Daemon (Self-Hosted Worker)
+
+Run your local machine as a Cloud Agents execution worker:
+
+```bash
+# Create a self_hosted environment (one-time)
+qca env create -n my-worker --type self_hosted
+
+# Start the daemon (foreground, Ctrl+C to stop)
+qca daemon start --environment-id env_xxx --workdir /path/to/workspace
+
+# With a custom worker name
+qca daemon start --environment-id env_xxx --workdir ./workspace --name my-mac
+```
+
+The daemon will:
+1. Long-poll the work queue for the specified environment
+2. Acknowledge and execute work items (agent tool calls)
+3. Execute tools locally: Bash, Read, Write, Edit, Glob, Grep
+4. Send tool results back to the Cloud Agents platform
+5. Maintain heartbeats to keep the lease alive
+6. Gracefully stop on Ctrl+C / SIGTERM
+
+**Security notes:**
+- All file operations (Read/Write/Edit/Glob/Grep) are sandboxed to `--workdir`. Path traversal is blocked.
+- Bash commands execute with the daemon's OS user permissions inside `--workdir`.
+- The PAT is never printed to stdout/logs.
+- Use a dedicated OS user with minimal permissions for production workers.
+
 ## Configuration
 
 Config is stored at `~/.config/qca/config.json`:
